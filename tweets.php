@@ -31,20 +31,27 @@ if ($http_code === 200) { // if everything's good
 	if ($_GET['callback']) { // if we ask for a jsonp callback function
 		echo $_GET['callback'],'(', $response,');';
 	} else {
-		$arr=json_decode($response,true);
-		
+                echo "hi guys  <br/> ";
 		$n="d1";
 		$myFile = $n .".txt";
 		$fh = fopen($myFile, 'w') or die("can't open file");
 		fwrite($fh, $response);
 		fclose($fh);
-		$n="d2";
+		$arr=json_decode($response);
+                $n="d2";
 		$myFile = $n .".txt";
-		$fh = fopen($myFile, 'w') or die("can't open file");
-		fwrite($fh, $arr);
+                $fh = fopen($myFile, 'w') or die("can't open file");
+                foreach($arr->statuses as $tweet)
+                {
+                 echo "{$tweet->user->screen_name} {$tweet->text}\n <br/>";
+                 $dat="{$tweet->user->screen_name} {$tweet->text}\n";
+                 fwrite($fh, $dat);
+                }
+                
 		fclose($fh);
 
-		print_r($arr);
+
+		//print_r($arr);
 		/*
 		echo $arr[0]['text'];
 		foreach($arr as &$value)
@@ -56,4 +63,4 @@ if ($http_code === 200) { // if everything's good
 	echo "Error: ",$connection->response['error'], "<br>\n";
 }
 
-// You may have to download and copy http://curl.haxx.se/ca/cacert.pem
+// You may have to download and copy http://curl.haxx.se/ca/cacert.pem							
